@@ -1,0 +1,108 @@
+function steps = particle_simulation()
+    % This function simulates the movement of a particle in a 100x100 grid.
+    % It returns the total number of steps taken to reach the endpoint.
+    % Source for function definition: Lecture Slide 73
+
+    % --- Initialization ---
+    i = 1;      % Starting x-coordinate (Lecture Slide 13: Variable assignment)
+    j = 1;      % Starting y-coordinate
+    steps = 0;  % Initialize step counter to 0
+    
+    % Vectors to store the path history for plotting
+    % We initialize them with the starting position.
+    % Source for vectors: Lecture Slide 30 / Tutorial 2
+    path_i = [1]; 
+    path_j = [1];
+
+    % Display header for the table of m and n values (Task b)
+    % Source for fprintf: Lecture Slide 26 / Tutorial 1 Q6
+    fprintf('k\tm\tn\n'); 
+
+    % --- Simulation Loop ---
+    % The particle continues moving while EITHER i OR j is <= 90.
+    % It stops only when BOTH i > 90 AND j > 90.
+    % Source for while loop: Lecture Slide 130 / Tutorial 8 Q1
+    % Source for logical operators (|| for OR): Lecture Slide 124 / Tutorial 6 Q8
+    while (i <= 90 || j <= 90)
+        
+        % Increment step counter
+        steps = steps + 1;
+        
+        % Generate random steps m and n between -20 and 20
+        % Source for randi: Lecture Slide 47 / Tutorial 9 Q6
+        m = randi([-20, 20]);
+        n = randi([-20, 20]);
+        
+        % Print the values of step k, m, and n (Task b)
+        % \t is a tab space, \n is a new line
+        fprintf('%d\t%d\t%d\n', steps, m, n);
+        
+        % Calculate tentative new positions
+        next_i = i + m;
+        next_j = j + n;
+        
+        % --- Boundary Checks (Bouncing Logic) ---
+        % Source for if-elseif-else: Lecture Slide 113 / Tutorial 6
+        
+        % Check X-boundary (i)
+        if next_i > 100
+            % If it crosses the right border (100), it bounces back.
+            % Example: At 95, step 10 -> 105. Excess is 5. Position becomes 100 - 5 = 95.
+            % Formula: 100 - (next_i - 100) = 200 - next_i
+            i = 200 - next_i;
+        elseif next_i < 1
+            % If it crosses the left border (1), it bounces forward.
+            % Example: At 5, step -10 -> -5. Excess is 6 (dist to 1). Position 1 + 6 = 7.
+            % Formula: 1 + (1 - next_i) = 2 - next_i
+            i = 2 - next_i;
+        else
+            % No boundary crossing
+            i = next_i;
+        end
+        
+        % Check Y-boundary (j) - Same logic as above
+        if next_j > 100
+            j = 200 - next_j;
+        elseif next_j < 1
+            j = 2 - next_j;
+        else
+            j = next_j;
+        end
+        
+        % Append the new position to the history vectors for plotting
+        % Source for appending to vector: Lecture Slide 46 / Tutorial 7 Q6
+        path_i = [path_i, i];
+        path_j = [path_j, j];
+        
+    end
+    
+    % --- Plotting (Task c) ---
+    % Source for figure: Lecture Slide 84
+    figure(1); 
+    
+    % Plot the path in blue
+    % Source for plot: Lecture Slide 82 / Tutorial 5 Q1
+    plot(path_i, path_j, 'b-o'); 
+    
+    % Keep the plot active to add start/end points
+    % Source for hold on: Lecture Slide 84
+    hold on; 
+    
+    % Plot start point (1,1) as a green dot ('g.') with larger marker size
+    plot(1, 1, 'g.', 'MarkerSize', 20); 
+    
+    % Plot end point (current i,j) as a red dot ('r.')
+    plot(path_i(end), path_j(end), 'r.', 'MarkerSize', 20);
+    
+    % Add grid and labels
+    % Source for grid/labels: Lecture Slide 83 / Tutorial 5 Q1
+    grid on;
+    xlabel('X Position (i)');
+    ylabel('Y Position (j)');
+    title(['Particle Movement (Total Steps: ', num2str(steps), ')']);
+    
+    % Set axis limits to match the domain size
+    axis([0 100 0 100]);
+    
+    hold off;
+end
