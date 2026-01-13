@@ -1,0 +1,34 @@
+% Script file: run_assignment.m
+% Purpose: Run the particle simulation 100 times and analyze the distribution of steps.
+
+% Clear workspace and command window
+% Source: Lecture Slide 14 / Tutorial 1 Q5
+clear; clc;
+
+% Initialize a vector to store the result of each simulation
+% Source: Lecture Slide 47 (zeros pre-allocation is good practice)
+sim_results = zeros(1, 100);
+
+% Loop 100 times
+% Source: Lecture Slide 125 / Tutorial 7 Q3
+for k = 1:100
+    % Run the function and store the result
+    % NOTE: To avoid 100 plots popping up, you should comment out the 
+    % plotting section in 'particle_simulation.m' before running this.
+    sim_results(k) = particle_simulation();
+end
+
+% Create a new figure for the histogram
+% Source: Lecture Slide 84
+figure(2);
+
+% Plot the histogram of the results
+% Source: Explicitly requested in Assignment PDF Page 3, Question (e)
+histogram(sim_results);
+
+% Add title and labels
+% Source: Lecture Slide 83 / Tutorial 5 Q1
+title('Distribution of Steps over 100 Simulations');
+xlabel('Number of Steps');
+ylabel('Frequency');
+grid on;
